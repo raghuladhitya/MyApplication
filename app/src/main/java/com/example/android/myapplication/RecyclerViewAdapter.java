@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>{
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private static final String TAG = "RecyclerViewAdapter";
     private ArrayList<Farmer> f;
@@ -23,23 +23,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(View view,int position);
+
+        void onItemLongClick(View view,int position);
     }
 
-    public void setmOnItemClickListener(OnItemClickListener listener){
-        mListener = listener;
-    }
 
-    public RecyclerViewAdapter(Context context, ArrayList<Farmer> farmer){
+    public RecyclerViewAdapter(Context context, ArrayList<Farmer> farmer,OnItemClickListener listener){
         f = farmer;
         mContext = context;
+        mListener = listener;
     }
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup,final int i) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_list_item,viewGroup,false);
-        MyViewHolder holder = new MyViewHolder(view,mListener);
+        final MyViewHolder holder = new MyViewHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mListener.onItemClick(v,i);
+            }
+        });
         return holder;
     }
 
@@ -67,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         CircleImageView imageView;
         TextView farmerName,farmerLoc,bar,description,Stock,detail;
 
-        public MyViewHolder(@NonNull View itemView,final OnItemClickListener listener) {
+        public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (CircleImageView) itemView.findViewById(R.id.image_no_1);
 
@@ -78,18 +90,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             farmerLoc = (TextView) itemView.findViewById(R.id.Farmer_Loc);
 
             bar = (TextView)itemView.findViewById(R.id.barrier);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(listener != null){
-                        int position = getAdapterPosition();
-                        if(position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
+
         }
 
     }
+
 }

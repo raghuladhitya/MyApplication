@@ -31,6 +31,7 @@ public class UserActivity extends AppCompatActivity{
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
                         selectedFragment = new HomeFragment();
+
                         break;
                     case R.id.nav_favourites:
                         selectedFragment = new FavouriteFragment();
@@ -40,7 +41,7 @@ public class UserActivity extends AppCompatActivity{
                         break;
                 }
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment_container, selectedFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment_container, selectedFragment).addToBackStack(null).commit();
                 return true;
             }
         });
