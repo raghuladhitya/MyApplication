@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,13 +22,13 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment{
 
+    String FarmerName;
     private static final String TAG = "HomeFragment";
     public ArrayList<Farmer> farmer;
-    RecyclerViewAdapter.OnItemClickListener listener;
     View mView;
     RecyclerView recyclerView;
     DatabaseReference reference;
-    RecyclerViewAdapter recyclerViewAdapter,getRecyclerViewAdapter;
+    RecyclerViewAdapter recyclerViewAdapter;
 
 
     @Nullable
@@ -57,12 +58,16 @@ public class HomeFragment extends Fragment{
                     Farmer f = dataSnapshot1.getValue(Farmer.class);
                     farmer.add(f);
                 }
-                recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), farmer, new RecyclerViewAdapter.OnItemClickListener() {
+                recyclerViewAdapter = new RecyclerViewAdapter(getContext(), farmer, new RecyclerViewAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        Toast.makeText(getActivity(), position +  " ",Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
                         NewFragment fragment = new NewFragment();
+                        bundle.putString("name", farmer.get(position).getName());
+                        bundle.putInt("position",position);
                         FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
-
+                        fragment.setArguments(bundle);
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fragment_container,fragment)
                                 .addToBackStack(null)
